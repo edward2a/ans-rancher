@@ -1,0 +1,12 @@
+all:
+
+  hosts:
+
+    rancher.hnet.local:
+
+  children:
+
+    rancher-manager:
+      hosts:
+        rancher.hnet.local:
+
