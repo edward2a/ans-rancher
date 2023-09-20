@@ -1,0 +1,11 @@
+---
+- hosts: rancher-manager
+  vars:
+    ansible_user: root
+
+  tasks:
+
+  - name: Deploy RKE2
+    ansible.builtin.include_role:
+      name: "{{ playbook_dir }}/../roles/rke2"
+
