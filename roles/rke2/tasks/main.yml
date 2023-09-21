@@ -22,3 +22,46 @@
     state: present
     reload: true
 
+- name: Fetch RKE2 install script
+  ansible.builtin.get_url:
+    url: "{{ rke2_install_script_url }}"
+    dest: /tmp/rke2.sh
+    mode: "0755"
+
+- name: Check RKE2 running
+  ansible.builtin.shell:
+    cmd: "systemctl is-active rke2-server || ls -l /usr/local/bin/rke2"
+  changed_when: false
+  ignore_errors: true
+  register: rke2_server_installed
+
+- name: Install RKE2 (primary)
+  when: "'primary' in group_names and rke2_server_installed.failed"
+  ansible.builtin.shell:
+    cmd: "INSTALL_RKE2_VERSION={{ rke2_version }} /tmp/rke2.sh"
+
+- name: Install RKE2 (secondary)
+  when: "'secondary' in group_names and rke2_server_installed.failed"
+  ansible.builtin.shell:
+    cmd: "INSTALL_RKE2_VERSION={{ rke2_version }} /tmp/rke2.sh"
+
+- name: Enable RKE2
+  ansible.builtin.systemd_service:
+    name: rke2-server
+    enabled: true
+    state: started
+
+- name: Find kubectl
+  ansible.builtin.find:
+    patterns: "kubectl"
+    paths: /var/lib/rancher/rke2/data
+    recurse: yes
+  register: kubectl_path
+
+- name: Link kubectl
+  ansible.builtin.file:
+    force: true
+    path: /usr/local/bin/kubectl
+    src: "{{ kubectl_path.files.0.path }}"
+    state: link
+
