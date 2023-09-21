@@ -1,5 +1,5 @@
 ---
-- hosts: rancher-manager
+- hosts: rke2-masters
   vars:
     ansible_user: root
 
