@@ -6,7 +6,11 @@ all:
 
   children:
 
-    rancher-manager:
+    rke2-masters:
+      hosts:
+        rancher.hnet.local:
+
+    primary:
       hosts:
         rancher.hnet.local:
 
