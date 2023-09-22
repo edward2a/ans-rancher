@@ -1,0 +1,11 @@
+---
+- hosts: primary
+  vars:
+    ansible_user: root
+
+  tasks:
+
+  - name: Deploy Rancher Manager
+    ansible.builtin.include_role:
+      name: "{{ playbook_dir }}/../roles/rancher"
+
