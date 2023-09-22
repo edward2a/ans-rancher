@@ -65,3 +65,10 @@
     src: "{{ kubectl_path.files.0.path }}"
     state: link
 
+- name: Link kubectl (k)
+  ansible.builtin.file:
+    force: true
+    path: /usr/local/bin/k
+    src: "{{ kubectl_path.files.0.path }}"
+    state: link
+
